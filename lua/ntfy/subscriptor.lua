@@ -1,11 +1,10 @@
 ---@class NtfySubscriptor
 local M = {}
 
-local mime = vim.mime
-local socket = vim.socket
-
+local b64 = require("..utils.b64")
 local isempty = function(s) return s == nil or s == '' end
 
+-- Handles SSE events
 local handle_sse = function(event)
     local decoded_data, pos, err = vim.json.decode(event)
 
@@ -15,7 +14,7 @@ local handle_sse = function(event)
     end
 
     if err then
-      vim.notify("ERROR - could not parse JSON: " .. event)
+      vim.notify("ERROR - could not parse JSON: " .. event, vim.log.levels.ERROR)
       return -1
     end
 
@@ -46,33 +45,49 @@ local handle_sse = function(event)
 end
 
 M.subscribe = function(config)
-    local client = assert(socket.tcp())
-
-    client:settimeout(10)
-
-    assert(client:connect(config.host, config.port))
-
-    local request = "GET /" .. config.topic .. "/sse HTTP/1.1\r\n" ..
-                    "Host: " .. config.host .. "\r\n" ..
-                    "Accept: text/event-stream\r\n"
-
-    -- Basic auth support
-    if not isempty(config.username) and not isempty(config.password) then
-      request = request .. "Authorization: " .. "Basic " .. mime.b64(username .. ":" .. password) .. "\r\n"
+  vim.loop.getaddrinfo(config.host, nil, {}, function(err, res)
+    if err then
+      vim.notify("DNS resolution failed: " .. err, vim.log.levels.ERROR)
+      return
     end
 
-    request = request .. "Connection: keep-alive\r\n\r\n"
+    local host_ip = res[1].addr
+    local client = assert(vim.loop.new_tcp())
 
-    client:send(request)
-    client:settimeout(0)
+    if not client then
+      vim.notify("Connection failed: " .. err, vim.log.levels.ERROR)
+      return
+    end
 
-    local buffer = ""
+    client:connect(host_ip, config.port, function(err)
+      if err then
+          vim.notify("Connection failed: " .. err, vim.log.levels.ERROR)
+          client:close()
+          return
+      end
 
-    while true do
-        local chunk, status, partial = client:receive(1024)
-        local data = chunk or partial
-        if data then
-            buffer = buffer .. data
+      -- right now we only support 1 topic
+      local request = "GET /" .. config.topics[1] .. "/sse HTTP/1.1\r\n" ..
+                      "Host: " .. config.host .. "\r\n" ..
+                      "Accept: text/event-stream\r\n"
+      -- Basic auth support
+      if not isempty(config.username) and not isempty(config.password) then
+        request = request .. "Authorization: " .. "Basic " .. b64.enc(config.username .. ":" .. config.password) .. "\r\n"
+      end
+      request = request .. "Connection: keep-alive\r\n\r\n"
+
+      client:write(request)
+
+      local buffer = ""
+      client:read_start(function(err, chunk)
+        if err then
+            vim.notify("Read error: " .. err, vim.log.levels.ERROR)
+            client:close()
+            return
+        end
+
+        if chunk then
+            buffer = buffer .. chunk
             for line in buffer:gmatch("[^\r\n]+") do
                 if line:find("data:") then
                     -- Remove "data: " prefix
@@ -80,19 +95,15 @@ M.subscribe = function(config)
                     handle_sse(event_data)
                 end
             end
-
             buffer = ""
+        else
+          vim.notify("Connection closed")
+          client:close()
         end
 
-        if status == "closed" then
-            vim.notify("Connection closed")
-            break
-        end
-        
-        socket.sleep(0.1)
-    end
-
-    client:close()
+      end)
+    end)
+  end)
 end
 
 return M
