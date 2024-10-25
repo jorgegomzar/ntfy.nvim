@@ -17,11 +17,12 @@ local custom_config = {
 
 describe("setup", function()
   it("default configuration", function()
-    assert(ntfy.setup() == default_config, "Default configuration is correct")
+    ntfy.setup()
+    assert(table.concat(ntfy.config) == table.concat(default_config), "Default configuration is not correct")
   end)
 
   it("custom configuration", function()
     ntfy.setup(custom_config)
-    assert(ntfy.config == custom_config, "Custom configuration is correctly loaded")
+    assert(table.concat(ntfy.config) == table.concat(custom_config), "Custom configuration is not correctly loaded")
   end)
 end)

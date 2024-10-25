@@ -1,14 +1,13 @@
 ---@class NtfySubscriptor
 local M = {}
 
-local socket = require("socket")
-local mime = require("mime")
-local json = require("dkjson")
+local mime = vim.mime
+local socket = vim.socket
 
 local isempty = function(s) return s == nil or s == '' end
 
 local handle_sse = function(event)
-    local decoded_data, pos, err = json.decode(event)
+    local decoded_data, pos, err = vim.json.decode(event)
 
     if decoded_data.event == "keepalive" then
       -- ignore keepalive
