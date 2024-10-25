@@ -1,3 +1,4 @@
+-- Credits to taybart: https://github.com/taybart/b64.nvim/blob/main/lua/b64.lua
 local b64 = {}
 
 -- encode selected text to base64
