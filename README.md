@@ -25,8 +25,15 @@ I will try to not introduce breaking changes but just so you know this code is p
       username = "my_user",  -- default: nil
       password = "my_password", -- default: nil
     },
+    dependencies = { "folke/noice.nvim" }
   },
   ```
+
+Also, add extension to Telescope:
+
+```lua
+require("telescope").load_extension("noice")
+```
 
 ## Extra considerations
 

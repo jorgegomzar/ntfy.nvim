@@ -2,6 +2,7 @@
 local M = {}
 
 local b64 = require("..utils.b64")
+local logger = require("..utils.logger")
 local isempty = function(s) return s == nil or s == '' end
 
 -- Handles SSE events
@@ -14,7 +15,7 @@ local handle_sse = function(event)
     end
 
     if err then
-      vim.notify("ERROR - could not parse JSON: " .. event, vim.log.levels.ERROR)
+      logger.error("Could not parse JSON: " .. event)
       return -1
     end
 
@@ -40,14 +41,14 @@ local handle_sse = function(event)
     end
 
     if not isempty(parsed_event) then
-      vim.notify(parsed_event)
+      logger.info(parsed_event)
     end
 end
 
 M.subscribe = function(config)
   vim.loop.getaddrinfo(config.host, nil, {}, function(err, res)
     if err then
-      vim.notify("DNS resolution failed: " .. err, vim.log.levels.ERROR)
+      logger.error("DNS resolution failed: " .. err)
       return
     end
 
@@ -55,13 +56,13 @@ M.subscribe = function(config)
     local client = assert(vim.loop.new_tcp())
 
     if not client then
-      vim.notify("Connection failed: " .. err, vim.log.levels.ERROR)
+      logger.error("Connection failed: " .. err)
       return
     end
 
     client:connect(host_ip, config.port, function(err)
       if err then
-          vim.notify("Connection failed: " .. err, vim.log.levels.ERROR)
+          logger.error("Connection failed: " .. err)
           client:close()
           return
       end
@@ -81,7 +82,7 @@ M.subscribe = function(config)
       local buffer = ""
       client:read_start(function(err, chunk)
         if err then
-            vim.notify("Read error: " .. err, vim.log.levels.ERROR)
+            logger.error("Read error: " .. err)
             client:close()
             return
         end
@@ -97,7 +98,7 @@ M.subscribe = function(config)
             end
             buffer = ""
         else
-          vim.notify("Connection closed")
+          logger.info("Connection closed")
           client:close()
         end
 
