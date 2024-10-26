@@ -2,7 +2,9 @@
 
 This Neovim plugin will print NTFY messages from your subscribed topics inside Neovim.
 
-![Here is a quick demo!](https://youtu.be/93O0_d8-qLw)
+Here is a quick demo!
+
+[![Demo video](https://img.youtube.com/vi/93O0_d8-qLw/0.jpg)](https://www.youtube.com/watch?v=93O0_d8-qLw)
 
 ## Installation & configuration
 
