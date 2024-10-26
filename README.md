@@ -2,14 +2,7 @@
 
 This Neovim plugin will print NTFY messages from your subscribed topics inside Neovim.
 
-## ⚠️ This plugin functional but is still under development
-
-I will try to not introduce breaking changes but just so you know this code is poorly tested and not documented at all yet!
-
-- [x] Support multiple topics
-- [ ] Make tests pass + add more
-- [ ] Update docs
-- [ ] Support sending ntfy messages
+![Here is a quick demo!](https://youtu.be/93O0_d8-qLw)
 
 ## Installation & configuration
 
@@ -54,3 +47,9 @@ location / {
     proxy_cache off;
 }
 ```
+
+## TODOs
+
+- [ ] Update docs
+- [ ] Support sending ntfy messages
+
