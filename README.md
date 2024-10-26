@@ -6,10 +6,10 @@ This Neovim plugin will print NTFY messages from your subscribed topics inside N
 
 I will try to not introduce breaking changes but just so you know this code is poorly tested and not documented at all yet!
 
-- [ ] Support multiple topics
-- [ ] Support sending ntfy messages
+- [x] Support multiple topics
 - [ ] Make tests pass + add more
 - [ ] Update docs
+- [ ] Support sending ntfy messages
 
 ## Installation & configuration
 
@@ -20,7 +20,7 @@ I will try to not introduce breaking changes but just so you know this code is p
     opts = {
       subscribe_on_init = true,  -- default: true
       host = "ntfy.self_hosted.com",  -- default: ntfy.sh
-      topics = {"nvim"}, -- default: {"nvim"}. Currently only 1 topic is supported
+      topics = {"nvim", "my_other_topic"}, -- default: {"nvim"} 
       port = 80,  -- default: 443
       username = "my_user",  -- default: nil
       password = "my_password", -- default: nil
@@ -29,7 +29,7 @@ I will try to not introduce breaking changes but just so you know this code is p
   },
   ```
 
-Also, add extension to Telescope:
+Also, you can add extension to Telescope if you want to:
 
 ```lua
 require("telescope").load_extension("noice")
