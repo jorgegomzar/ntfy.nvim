@@ -1,5 +1,5 @@
 -- main module file
-local subscriptor = require("ntfy.subscriptor")
+local subscriber = require("ntfy.subscriber")
 
 ---@class Config
 ---@field subscribe_on_init bool Whether to automatically subcribe to topics on plugin load
@@ -31,7 +31,7 @@ M.setup = function(args)
 end
 
 M.subscribe = function()
-  return subscriptor.subscribe(M.config)
+  return subscriber.subscribe(M.config)
 end
 
 return M
