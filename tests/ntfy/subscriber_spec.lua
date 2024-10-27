@@ -7,15 +7,15 @@ describe("parse_event", function()
 
   it("event open with 1 topic", function()
     assert(
-      subscriber.parse_event('{"event": "open", "topic": "test_1"}') == "\n󱘖  - Subscribed to topic test_1"
+      subscriber.parse_event('{"event": "open", "topic": "test_1"}') == "󱘖  - Subscribed to topic test_1\n"
     )
   end)
 
   it("event open with +1 topic", function()
     assert(
       subscriber.parse_event('{"event": "open", "topic": "test_1,test_2"}') == (
-        "\n󱘖  - Subscribed to topic test_1" ..
-        "\n󱘖  - Subscribed to topic test_2"
+        "󱘖  - Subscribed to topic test_1\n" ..
+        "󱘖  - Subscribed to topic test_2\n"
       )
     )
   end)

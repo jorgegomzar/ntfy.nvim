@@ -20,7 +20,7 @@ M.parse_event = function(event)
 
   if decoded_data.event == "open" then
     for _, topic in ipairs(str_utils.csv_to_table(decoded_data.topic)) do
-      parsed_event = parsed_event .. "\n󱘖  - Subscribed to topic " .. topic
+      parsed_event = parsed_event .. "󱘖  - Subscribed to topic " .. topic .. "\n"
     end
     return parsed_event
   end
