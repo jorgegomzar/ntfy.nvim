@@ -8,6 +8,7 @@ local subscriber = require("ntfy.subscriber")
 ---@field port integer NTFY port
 ---@field username string NTFY username
 ---@field password string NTFY password
+---@field since string fetch cached messages since X event / time
 local config = {
   subscribe_on_init = true,
   host = "ntfy.sh",
@@ -15,6 +16,7 @@ local config = {
   port = 443,
   username = nil,
   password = nil,
+  since = nil,  -- see: https://docs.ntfy.sh/subscribe/api/#fetch-cached-messages
 }
 
 ---@class Ntfy

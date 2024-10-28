@@ -89,10 +89,16 @@ M.subscribe = function(config)
           return
       end
 
-      -- right now we only support 1 topic
-      local request = "GET /" .. topics .. "/sse HTTP/1.1\r\n" ..
+      local url = "/" .. topics .. "/sse"
+
+      if not is_empty(config.since) then
+        url = url .. "?since=" .. config.since
+      end
+
+      local request = "GET " .. url .. " HTTP/1.1\r\n" ..
                       "Host: " .. config.host .. "\r\n" ..
                       "Accept: text/event-stream\r\n"
+--
       -- Basic auth support
       if not str_utils.is_empty(config.username) and not str_utils.is_empty(config.password) then
         request = request .. "Authorization: " .. "Basic " .. b64.enc(config.username .. ":" .. config.password) .. "\r\n"

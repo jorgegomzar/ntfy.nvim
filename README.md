@@ -19,6 +19,7 @@ Here is a quick demo!
       port = 80,  -- default: 443
       username = "my_user",  -- default: nil
       password = "my_password", -- default: nil
+      since = nil,  -- see: https://docs.ntfy.sh/subscribe/api/#fetch-cached-messages
     },
     dependencies = { "folke/noice.nvim" }
   },
