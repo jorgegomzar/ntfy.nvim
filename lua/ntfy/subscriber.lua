@@ -1,4 +1,4 @@
----@class NtfySubscriptor
+--@class NtfySubscriptor
 local M = {}
 
 local b64 = require("ntfy.utils.b64")
@@ -91,7 +91,7 @@ M.subscribe = function(config)
 
       local url = "/" .. topics .. "/sse"
 
-      if not is_empty(config.since) then
+      if not str_utils.is_empty(config.since) then
         url = url .. "?since=" .. config.since
       end
 
